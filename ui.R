@@ -50,7 +50,7 @@ shinyUI(fluidPage(theme = shinytheme("spacelab"),
          tags$a("Joseph V. Casillas", href="http://www.jvcasillas.com"),
        br(), 
          strong("Source code:"), 
-         tags$a("Github", href="https://github.com/jvcasill/shiny_clt/"))),
+         tags$a("Github", href="https://github.com/jvcasillas/shiny_glm"))),
     
     # Show a plot of the generated distribution
     mainPanel(
