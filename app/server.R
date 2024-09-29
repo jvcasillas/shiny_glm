@@ -1,9 +1,3 @@
-library(shiny)
-library(tidyverse)
-library(shinythemes)
-library(patchwork)
-library(stargazer)
-
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
 
@@ -42,19 +36,20 @@ shinyServer(function(input, output) {
     my_theme <- function(...) {
       list(
         geom_point(size = 3, shape = 21, fill = "grey", color = 'black'), 
-        geom_smooth(method = 'glm', 
+        geom_smooth(method = 'glm', formula = 'y ~ x', 
                     method.args = list(family = input$dist_family), 
-                    size = 2, color = "darkred"), 
-        theme_minimal(base_family = 'Times', base_size = 20), 
-        theme(panel.grid.major = element_blank(), 
-              panel.grid.minor = element_blank())
+                    linewidth = 2, color = "darkred"), 
+        theme_bw(base_family = 'Palatino', base_size = 20), 
+        theme(panel.grid.major = element_line(linewidth = 0.5), 
+              panel.grid.minor = element_line(linewidth = 0.5))
         )
     }
 
     # Plot results
-    p1 <- tibble(x = x(), y = y()) %>%
-      ggplot(., aes(x = x, y = y)) + 
-        my_theme()
+    p1 <- tibble(x = x(), y = y()) |>
+      ggplot() + 
+      aes(x = x, y = y) + 
+      my_theme()
 
 
     p1
@@ -63,19 +58,20 @@ shinyServer(function(input, output) {
 
   output$values <- renderPrint({
     fit <- mod()
-    stargazer(fit, type = 'html', single.row=TRUE, 
-              ci=TRUE, ci.level=0.95, align=FALSE,
-              covariate.labels = c("x", "Intercept"), 
-              dep.var.labels = "y")
+    #stargazer(fit, type = 'html', single.row=TRUE, 
+    #          ci=TRUE, ci.level=0.95, align=FALSE,
+    #          covariate.labels = c("x", "Intercept"), 
+    #          dep.var.labels = "y")
+    modelsummary(fit)
     })
 
   output$resid_plot <- renderPlot({
 
     my_theme <- function(...) {
       list(
-        theme_minimal(base_family = 'Times', base_size = 20), 
-        theme(panel.grid.major = element_blank(), 
-              panel.grid.minor = element_blank())
+        theme_bw(base_family = 'Palatino', base_size = 20), 
+        theme(panel.grid.major = element_line(linewidth = 0.5), 
+              panel.grid.minor = element_line(linewidth = 0.5))
         )
     }
 
@@ -92,13 +88,14 @@ shinyServer(function(input, output) {
     the_cor <- cor(vec, qqnorm(vec)$x)
 
     # Create plot
-    tibble(resid = vec) %>%
-    ggplot(., aes(sample = resid)) + 
-      geom_point(stat = 'qq', shape = 21, size = 3) + 
-      geom_abline(slope = slope, intercept = int, size = 2) + 
-      annotate("text", x = -1, y = max(y), size = 8,
-               label = paste0("r = ", round(the_cor, 4))) +
-      my_theme() 
+    tibble(resid = vec) |>
+    ggplot() + 
+    aes(sample = resid) + 
+    geom_point(stat = 'qq', shape = 21, size = 3) + 
+    geom_abline(slope = slope, intercept = int, linewidth = 2) + 
+    annotate("text", x = -1, y = max(y), size = 8,
+             label = paste0("r = ", round(the_cor, 4))) +
+    my_theme() 
     }
 
     vec <- y()

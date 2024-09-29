@@ -1,7 +1,8 @@
 library(shiny)
-library(tidyverse)
 library(shinythemes)
-library(patchwork)
+library(ggplot2)
+library(tibble)
+library(modelsummary)
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(theme = shinytheme("spacelab"),
