@@ -1,0 +1,13 @@
+name: shiny_glm
+title: shiny_glm
+username:
+account: jvcasill
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 256868
+bundleId: 1176109
+url: https://jvcasill.shinyapps.io/shiny_glm/
+when: 1515978992.62372
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: .gitattributes|concept.R|README.md
