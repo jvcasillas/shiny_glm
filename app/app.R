@@ -79,7 +79,6 @@ ui <- shinyUI(fluidPage(theme = shinytheme("spacelab"),
 
 
 # Define server logic required to draw a histogram
-
 server <- function(input, output) {
     
     output$currentTime <- renderText({
@@ -127,10 +126,14 @@ server <- function(input, output) {
       }
       
       # Plot results
-      p1 <- tibble(x = x(), y = y()) |>
+      # p1 <- tibble(x = x(), y = y()) |>
+      #   ggplot() + 
+      #   aes(x = x, y = y) + 
+      #   my_theme()
+      p1 <- mtcars |> 
         ggplot() + 
-        aes(x = x, y = y) + 
-        my_theme()
+        aes(x = drat, y = mpg)+ 
+        geom_point()
       p1
       
     })
