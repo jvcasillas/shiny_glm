@@ -12,7 +12,7 @@ library(stargazer)
 ui <- shinyUI(fluidPage(theme = shinytheme("spacelab"),
   
   # Application title
-  titlePanel("GLM"),
+  titlePanel("GLM", windowTitle = "GLM"),
   
   # Sidebar with dynamic variables
   sidebarLayout(
