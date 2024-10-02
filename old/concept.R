@@ -57,8 +57,13 @@ y  <- rbinom(data_n, size = 1, prob = exp(s) / (1 + exp(s)))
 # Fit model
 mod_log <- glm(y ~ x, family = 'binomial')
 
+
+
+
 # plot
 tibble(y = y, x = x) %>% 
   ggplot(., aes(x = x, y = y)) + 
     geom_point() + 
     geom_smooth(method = 'glm', method.args = list(family = 'binomial')) 
+
+

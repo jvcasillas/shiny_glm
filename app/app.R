@@ -91,6 +91,10 @@ server <- function(input, output) {
       x <- runif(n = input$data_n, min = 0, max = 20)
     })
     
+    dist <- reactive({
+      dist <- input$dist_family  
+    })
+    
     # Generate outcome
     y <- reactive({
       if (input$outcome_var == 'gaussian') {
@@ -104,40 +108,35 @@ server <- function(input, output) {
         y <- rbinom(input$data_n, size = 1, prob = exp(s) / (1 + exp(s)))
       }
     })
-    
+
+
+    output$glm_plot <- renderPlot({
+      # Plot results
+      p1 <- tibble(x = x(), y = y()) |>
+        ggplot() + 
+        aes(x = x, y = y) + 
+        geom_point(size = 3, shape = 21, fill = "#cc0033", color = 'white') + 
+        stat_smooth(
+          method = 'glm', 
+          formula = 'y ~ x', 
+          method.args = list(family = input$dist_family), 
+          linewidth = 2, 
+          color = "black"
+        ) + 
+        theme_bw(base_family = 'Palatino', base_size = 20) + 
+        theme(
+          panel.grid.major = element_line(linewidth = 0.5), 
+          panel.grid.minor = element_line(linewidth = 0.5)
+        ) + 
+      NULL
+      p1
+    })
+
     mod <- reactive({
       # fit model
       mod <- glm(y() ~ x(), family = input$dist_family)
     })
-    
-    
-    output$glm_plot <- renderPlot({
-      
-      my_theme <- function(...) {
-        list(
-          geom_point(size = 3, shape = 21, fill = "grey", color = 'black'), 
-          geom_smooth(method = 'glm', formula = 'y ~ x', 
-                      method.args = list(family = input$dist_family), 
-                      linewidth = 2, color = "darkred"), 
-          theme_bw(base_family = 'Palatino', base_size = 20), 
-          theme(panel.grid.major = element_line(linewidth = 0.5), 
-                panel.grid.minor = element_line(linewidth = 0.5))
-        )
-      }
-      
-      # Plot results
-      # p1 <- tibble(x = x(), y = y()) |>
-      #   ggplot() + 
-      #   aes(x = x, y = y) + 
-      #   my_theme()
-      p1 <- mtcars |> 
-        ggplot() + 
-        aes(x = drat, y = mpg)+ 
-        geom_point()
-      p1
-      
-    })
-    
+
     output$values <- renderPrint({
       fit <- mod()
       stargazer(fit, type = 'html', single.row=TRUE, 
